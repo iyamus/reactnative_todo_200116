@@ -1,32 +1,61 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform, ScrollView } from 'react-native';
+import ToDo from "./ToDo";
+
 
 const { height, width } = Dimensions.get("window");
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
-      <Text style={styles.title}>Simple To Do</Text>
-      <View style={styles.card}>
-        <TextInput style={styles.input} placeholder={"New to do."}></TextInput>
+export default class App extends React.Component {
+  state = {
+    newTodo: ""
+  };
+
+  render() {
+    const { newTodo } = this.state;
+
+    return (
+      <View style={styles.container}>
+        <StatusBar barStyle="light-content" />
+        <Text style={styles.title}>Simple To Do</Text>
+        <View style={styles.card}>
+          <TextInput style={styles.input}
+            value={newTodo}
+            onChangeText={this._controlNewToDo}
+
+            //세부 설정
+            placeholder={"New to do."}
+            placeholderTextColor={"#999"}
+            autoCorrect={false}
+          />
+          <ScrollView contentContainerStyle={styles.todo}>
+            <ToDo />
+
+          </ScrollView>
+        </View>
       </View>
-    </View>
-  );
+    );
+  }
+
+  _controlNewToDo = text => {
+    this.setState({
+      newTodo: text
+    })
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F23657',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   title: {
     color: "white",
     fontSize: 30,
     marginTop: 50,
     fontWeight: "300",
-    marginBottom: 30
+    marginBottom: 30,
+    fontFamily: 'serif'
   },
   card: {
     backgroundColor: "white",
@@ -52,6 +81,13 @@ const styles = StyleSheet.create({
     })
   },
   input: {
-
+    padding: 20,
+    borderBottomColor: "#bbb",
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    fontSize: 25,
+    fontFamily: 'sans-serif-light'
+  },
+  todo:{
+    alignItems:"center"
   }
 });
