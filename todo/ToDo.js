@@ -7,10 +7,12 @@ export default class ToDo extends React.Component {
 
     state = {
         isEditing: false,
-        isCompleted: false
+        isCompleted: false,
+        toDoValue: ""
     };
     render() {
         const { isCompleted, isEditing } = this.state;
+        const { text } = this.props;
 
         return (
             <View style={styles.container}>
@@ -22,14 +24,27 @@ export default class ToDo extends React.Component {
                             styles.uncompletedCircle
                         ]} />
                     </TouchableOpacity>
-                    <Text style={
-                        [
-                            styles.text,
+                    {isEditing ?
+                        (<TextInput style={[
+                            styles.input, 
+                            styles.text, 
                             isCompleted ?
-                                styles.comletedText :
-                                styles.uncompletedText
-                        ]
-                    }>Hello</Text>
+                            styles.comletedText : styles.uncompletedText]}
+                            value={this.state.toDoValue} multiline={true} 
+                            onChangeText={this._controlInput}
+                            />
+                        ) : (
+                            <Text style={
+                                [
+                                    styles.text,
+                                    isCompleted ?
+                                        styles.comletedText :
+                                        styles.uncompletedText
+                                ]
+                            }>
+                                {text}
+                            </Text>
+                        )}
                 </View>
                 {isEditing ?
                     (
@@ -65,9 +80,11 @@ export default class ToDo extends React.Component {
         })
     }
     _startEditing = () => {
+        const { text } = this.props;
         this.setState(preState => {
             return {
-                isEditing: true
+                isEditing: true,
+                toDoValue: text
             };
         })
 
@@ -77,6 +94,11 @@ export default class ToDo extends React.Component {
             return {
                 isEditing: false
             };
+        })
+    }
+    _controlInput = (text)=>{
+        this.setState({
+            toDoValue: text
         })
     }
 }
