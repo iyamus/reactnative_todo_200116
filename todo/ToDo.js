@@ -26,12 +26,14 @@ export default class ToDo extends React.Component {
                     </TouchableOpacity>
                     {isEditing ?
                         (<TextInput style={[
-                            styles.input, 
                             styles.text, 
+                            styles.input, 
                             isCompleted ?
                             styles.comletedText : styles.uncompletedText]}
                             value={this.state.toDoValue} multiline={true} 
                             onChangeText={this._controlInput}
+                            // 외부영역 클릭시 자동으로 입력되도록 함.
+                            onBlur={this._finishEditing}
                             />
                         ) : (
                             <Text style={

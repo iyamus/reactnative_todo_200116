@@ -1,17 +1,28 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform, ScrollView, AsyncStorage } from 'react-native';
 import ToDo from "./ToDo";
+import { AppLoading } from "expo";
+import uuidv1 from "uuid";
 
 
 const { height, width } = Dimensions.get("window");
 
 export default class App extends React.Component {
   state = {
-    newTodo: ""
+    newToDo: "",
+    loadedToDos: false,
+    toDo: {}
   };
 
+  componentDidMount = () => {
+    this._loadToDos();
+  }
   render() {
-    const { newTodo } = this.state;
+    const { newTodo, loadedToDos,toDo } = this.state;
+
+    if (!loadedToDos) {
+      return <AppLoading />
+    }
 
     return (
       <View style={styles.container}>
@@ -26,9 +37,10 @@ export default class App extends React.Component {
             placeholder={"New to do."}
             placeholderTextColor={"#999"}
             autoCorrect={false}
+            onSubmitEditing={this._addToDo}
           />
           <ScrollView contentContainerStyle={styles.todo}>
-            <ToDo text={"Hi"}/>
+            <ToDo text={"Hi"} />
 
           </ScrollView>
         </View>
@@ -40,6 +52,41 @@ export default class App extends React.Component {
     this.setState({
       newTodo: text
     })
+  }
+  _loadToDos = () => {
+    this.setState({
+      loadedToDos: true
+    });
+  }
+  _addToDo = () => {
+    const { newTodo } = this.state;
+    if (newTodo !== "") {
+      this.setState(prevState => {
+        //고유 ID 생성을 위해 uuid 사용
+        const ID = uuidv1();
+
+        const newToDoObj = {
+          [ID]: {
+            id: ID,
+            isCompleted: false,
+            text: newTodo,
+            createdAt: Date.now()
+          }
+        }
+      });
+      const newState = {
+        //이전의 state 정보를 가져오고
+        ...prevState,
+        //newTodo에 입력된 정보를 없애고
+        newTodo: "",
+        //이전의 todo와 신규 todoObj를 하나로 묶는다.
+        todo: {
+          ...prevState.todo,
+          ...newToDoObj
+        }
+      }
+      return { ...newState };
+    }
   }
 }
 
@@ -87,7 +134,7 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontFamily: 'sans-serif-light'
   },
-  todo:{
-    alignItems:"center"
+  todo: {
+    alignItems: "center"
   }
 });
