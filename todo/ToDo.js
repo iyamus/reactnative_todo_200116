@@ -10,25 +10,72 @@ export default class ToDo extends React.Component {
         isCompleted: false
     };
     render() {
-        const { isCompleted } = this.state;
+        const { isCompleted, isEditing } = this.state;
 
         return (
             <View style={styles.container}>
-                <TouchableOpacity onPress={this._completeTodo}>
-                    <View style={[styles.circle,
-                    isCompleted ?
-                        styles.comletedCircle :
-                        styles.uncompletedCircle
-                    ]}></View>
-                </TouchableOpacity>
-                <Text style={styles.text}>Hello</Text>
+                <View style={styles.column}>
+                    <TouchableOpacity onPress={this._completeTodo}>
+                        <View style={[styles.circle,
+                        isCompleted ?
+                            styles.comletedCircle :
+                            styles.uncompletedCircle
+                        ]} />
+                    </TouchableOpacity>
+                    <Text style={
+                        [
+                            styles.text,
+                            isCompleted ?
+                                styles.comletedText :
+                                styles.uncompletedText
+                        ]
+                    }>Hello</Text>
+                </View>
+                {isEditing ?
+                    (
+                        <View style={styles.actions}>
+                            <TouchableOpacity onPress={this._finishEditing}>
+                                <View style={styles.actionContainer}>
+                                    <Text style={styles.actionText}>✔️</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    ) : (
+                        <View style={styles.actions}>
+                            <TouchableOpacity onPress={this._startEditing}>
+                                <View style={styles.actionContainer}>
+                                    <Text style={styles.actionText}>✏️</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity>
+                                <View style={styles.actionContainer}>
+                                    <Text style={styles.actionText}>❌</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    )}
             </View>);
     }
 
     _completeTodo = () => {
         this.setState(preState => {
             return {
-                isCompleted: !preState.isCompleted
+                isCompleted: !preState.isCompleted,
+            };
+        })
+    }
+    _startEditing = () => {
+        this.setState(preState => {
+            return {
+                isEditing: true
+            };
+        })
+
+    }
+    _finishEditing = () => {
+        this.setState(preState => {
+            return {
+                isEditing: false
             };
         })
     }
@@ -41,7 +88,9 @@ const styles = StyleSheet.create({
         borderBottomWidth: StyleSheet.hairlineWidth,
         flexDirection: "row",
         alignItems: "center",
-        // padding: 10
+        //container를 속성에 따라 분리시킴.
+        justifyContent: "space-between"
+
     },
     text: {
         fontWeight: "600",
@@ -57,9 +106,38 @@ const styles = StyleSheet.create({
         marginRight: 20
     },
     comletedCircle: {
-        borderColor: "#F23657"
+        borderColor: "gray"
     },
     uncompletedCircle: {
-        borderColor: "gray"
+        borderColor: "#F23657"
+    },
+    comletedText: {
+        color: "#bbb",
+        //취소선 생성
+        textDecorationLine: "line-through"
+    },
+    uncomletedText: {
+        color: "#353839",
+    },
+    column: {
+        flexDirection: "row",
+        alignItems: "center",
+        width: width / 2
+    },
+    actions: {
+        flexDirection: "row"
+    },
+    actionContainer: {
+        marginVertical: 10,
+        marginHorizontal: 10
+    },
+    actionText: {},
+    input: {
+        width: width / 2,
+        marginVertical: 15,
+        paddingBottom: 5
+    },
+    mark: {
+        alignContent: "flex-end"
     }
 })
