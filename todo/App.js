@@ -40,7 +40,7 @@ export default class App extends React.Component {
             placeholderTextColor={"#999"}
             autoCorrect={false}
             onSubmitEditing={this._addToDo}
-
+            underlineColorAndroid={"transparent"}
           />
           <ScrollView contentContainerStyle={styles.todo}>
             {Object.values(todo)

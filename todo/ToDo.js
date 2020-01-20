@@ -38,6 +38,7 @@ export default class ToDo extends React.Component {
                             onChangeText={this._controlInput}
                             // 외부영역 클릭시 자동으로 입력되도록 함.
                             onBlur={this._finishEditing}
+                            underlineColorAndroid={"transparent"}
                         />
                         ) : (
                             <Text style={
