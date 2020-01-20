@@ -43,7 +43,9 @@ export default class App extends React.Component {
 
           />
           <ScrollView contentContainerStyle={styles.todo}>
-            {Object.values(todo).map(todo =>
+            {Object.values(todo)
+            .reverse() //최신항목이 먼저보이도록 설정.
+            .map(todo =>
               <ToDo
                 key={todo.id}
                 deleteTodo={this._deleteTodo}
@@ -64,10 +66,21 @@ export default class App extends React.Component {
       newTodo: text
     })
   }
-  _loadToDos = () => {
-    this.setState({
-      loadedToDos: true
-    });
+
+  //storage에서 정보를 가져오기 async ~ wait
+  _loadToDos = async () => {
+    try {
+      //string으로 저장된 정보를 가져옴. 
+      const todo = await AsyncStorage.getItem("todos");
+      //string을 Json 형태로 변환함
+      const parsedTodo = JSON.parse(todo);
+      this.setState({
+        loadedToDos: true,
+        todo: parsedTodo || {}
+      })
+    } catch (error) {
+      console.log(error);
+    }
   }
   _addToDo = () => {
     const { newTodo } = this.state;
@@ -162,12 +175,15 @@ export default class App extends React.Component {
       return { ...newState };
     });
   };
+
+  //
   _saveTodo = (newTodo) => {
     //AsyncStorage는 object가 아닌, string타입으로 저장한다.
     // 그래서 변환을 위해 stringify로 변환한다.
-    console.log("Json",JSON.stringify(newTodo));
+    console.log("Json1", JSON.stringify(newTodo));
     const saveTodo = AsyncStorage.setItem("todos", JSON.stringify(newTodo));
-    
+    console.log("Json2", saveTodo);
+
   }
 
 }
