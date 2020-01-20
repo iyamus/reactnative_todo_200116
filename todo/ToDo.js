@@ -1,18 +1,22 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform } from 'react-native';
+import { TouchableOpacity, StyleSheet, Text, View, StatusBar, TextInput, Dimensions, Platform, TouchableNativeFeedbackBase } from 'react-native';
 
 const { width, height } = Dimensions.get("window");
 
 export default class ToDo extends React.Component {
 
-    state = {
-        isEditing: false,
-        isCompleted: false,
-        toDoValue: ""
-    };
+    constructor(props) {
+        super(props);
+        this.state = {
+            isEditing: false,
+            toDoValue: props.text
+        }
+    }
+
     render() {
-        const { isCompleted, isEditing } = this.state;
-        const { text } = this.props;
+        // console.log("Todo.js ",this.props); 포기하지 말고 하나씩 확인해보자.
+        const { isEditing, toDoValue, isCompleted } = this.state;
+        const { text, id, deleteTodo } = this.props;
 
         return (
             <View style={styles.container}>
@@ -26,15 +30,15 @@ export default class ToDo extends React.Component {
                     </TouchableOpacity>
                     {isEditing ?
                         (<TextInput style={[
-                            styles.text, 
-                            styles.input, 
+                            styles.text,
+                            styles.input,
                             isCompleted ?
-                            styles.comletedText : styles.uncompletedText]}
-                            value={this.state.toDoValue} multiline={true} 
+                                styles.comletedText : styles.uncompletedText]}
+                            value={toDoValue} multiline={true}
                             onChangeText={this._controlInput}
                             // 외부영역 클릭시 자동으로 입력되도록 함.
                             onBlur={this._finishEditing}
-                            />
+                        />
                         ) : (
                             <Text style={
                                 [
@@ -64,7 +68,11 @@ export default class ToDo extends React.Component {
                                     <Text style={styles.actionText}>✏️</Text>
                                 </View>
                             </TouchableOpacity>
-                            <TouchableOpacity>
+                            <TouchableOpacity onPressOut={event => {
+                                // console.log("touch",id); 포기하지 말고 하나씩 확인해보자.
+                                event.stopPropagation;
+                                deleteTodo(id)
+                            }}>
                                 <View style={styles.actionContainer}>
                                     <Text style={styles.actionText}>❌</Text>
                                 </View>
@@ -82,11 +90,9 @@ export default class ToDo extends React.Component {
         })
     }
     _startEditing = () => {
-        const { text } = this.props;
         this.setState(preState => {
             return {
-                isEditing: true,
-                toDoValue: text
+                isEditing: true
             };
         })
 
@@ -98,7 +104,7 @@ export default class ToDo extends React.Component {
             };
         })
     }
-    _controlInput = (text)=>{
+    _controlInput = (text) => {
         this.setState({
             toDoValue: text
         })
