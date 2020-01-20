@@ -83,12 +83,12 @@ export default class ToDo extends React.Component {
     }
 
     _completeTodo = () => {
-       const {isCompleted, uncomplatedTodo, complatedTodo, id} =this. props;
-       if(isCompleted){
+        const { isCompleted, uncomplatedTodo, complatedTodo, id, updatedTodo } = this.props;
+        if (isCompleted) {
             uncomplatedTodo(id);
-        }else{
+        } else {
             complatedTodo(id);
-       }
+        }
     }
     _startEditing = () => {
         this.setState(preState => {
@@ -99,11 +99,10 @@ export default class ToDo extends React.Component {
 
     }
     _finishEditing = () => {
-        this.setState(preState => {
-            return {
-                isEditing: false
-            };
-        })
+        const { toDoValue } = this.state;
+        const { id, updatedTodo } = this.props;
+        updatedTodo(id, toDoValue);
+        this.setState({ isEditing: false })
     }
     _controlInput = (text) => {
         this.setState({
