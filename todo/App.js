@@ -95,6 +95,7 @@ export default class App extends React.Component {
             ...newToDoObj
           }
         };
+        this._saveTodo(newState.todo);
         return { ...newState };
       });
     }
@@ -108,6 +109,7 @@ export default class App extends React.Component {
         ...prevState,
         ...todo
       };
+      this._saveTodo(newState.todo);
       return { ...newState };
     });
   };
@@ -116,7 +118,7 @@ export default class App extends React.Component {
     this.setState(prevState => {
       const newState = {
         ...prevState,
-        todo:{
+        todo: {
           ...prevState.todo,
           [id]: {
             ...prevState.todo[id],
@@ -124,6 +126,7 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveTodo(newState.todo);
       return { ...newState };
     });
   };
@@ -131,7 +134,7 @@ export default class App extends React.Component {
     this.setState(prevState => {
       const newState = {
         ...prevState,
-        todo:{
+        todo: {
           ...prevState.todo,
           [id]: {
             ...prevState.todo[id],
@@ -139,14 +142,15 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveTodo(newState.todo);
       return { ...newState };
     });
   };
-  _updatedTodo = (id,text) => {
+  _updatedTodo = (id, text) => {
     this.setState(prevState => {
       const newState = {
         ...prevState,
-        todo:{
+        todo: {
           ...prevState.todo,
           [id]: {
             ...prevState.todo[id],
@@ -154,10 +158,17 @@ export default class App extends React.Component {
           }
         }
       };
+      this._saveTodo(newState.todo);
       return { ...newState };
     });
   };
-
+  _saveTodo = (newTodo) => {
+    //AsyncStorage는 object가 아닌, string타입으로 저장한다.
+    // 그래서 변환을 위해 stringify로 변환한다.
+    console.log("Json",JSON.stringify(newTodo));
+    const saveTodo = AsyncStorage.setItem("todos", JSON.stringify(newTodo));
+    
+  }
 
 }
 
