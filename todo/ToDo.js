@@ -15,8 +15,8 @@ export default class ToDo extends React.Component {
 
     render() {
         // console.log("Todo.js ",this.props); 포기하지 말고 하나씩 확인해보자.
-        const { isEditing, toDoValue, isCompleted } = this.state;
-        const { text, id, deleteTodo } = this.props;
+        const { isEditing, toDoValue } = this.state;
+        const { text, id, deleteTodo, isCompleted } = this.props;
 
         return (
             <View style={styles.container}>
@@ -83,11 +83,12 @@ export default class ToDo extends React.Component {
     }
 
     _completeTodo = () => {
-        this.setState(preState => {
-            return {
-                isCompleted: !preState.isCompleted,
-            };
-        })
+       const {isCompleted, uncomplatedTodo, complatedTodo, id} =this. props;
+       if(isCompleted){
+            uncomplatedTodo(id);
+        }else{
+            complatedTodo(id);
+       }
     }
     _startEditing = () => {
         this.setState(preState => {

@@ -47,7 +47,8 @@ export default class App extends React.Component {
               <ToDo
                 key={todo.id}
                 deleteTodo={this._deleteTodo}
-
+                uncomplatedTodo={this._uncomplatedTodo}
+                complatedTodo={this._complatedTodo}
                 {...todo}>
               </ToDo>)}
 
@@ -111,6 +112,36 @@ export default class App extends React.Component {
     });
   };
 
+  _uncomplatedTodo = (id) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todo:{
+          ...prevState.todo,
+          [id]: {
+            ...prevState.todo[id],
+            isCompleted: false
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
+  _complatedTodo = (id) => {
+    this.setState(prevState => {
+      const newState = {
+        ...prevState,
+        todo:{
+          ...prevState.todo,
+          [id]: {
+            ...prevState.todo[id],
+            isCompleted: true
+          }
+        }
+      };
+      return { ...newState };
+    });
+  };
 }
 
 
