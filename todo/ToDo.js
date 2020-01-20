@@ -70,6 +70,8 @@ export default class ToDo extends React.Component {
                             </TouchableOpacity>
                             <TouchableOpacity onPressOut={event => {
                                 // console.log("touch",id); 포기하지 말고 하나씩 확인해보자.
+
+                                //상위 컴포넌트인 SctrollView에 영향을 주지 않도록 설정
                                 event.stopPropagation;
                                 deleteTodo(id)
                             }}>
@@ -82,7 +84,9 @@ export default class ToDo extends React.Component {
             </View>);
     }
 
-    _completeTodo = () => {
+    _completeTodo = (event) => {
+        //상위 컴포넌트인 SctrollView에 영향을 주지 않도록 설정
+        event.stopPropagation();
         const { isCompleted, uncomplatedTodo, complatedTodo, id, updatedTodo } = this.props;
         if (isCompleted) {
             uncomplatedTodo(id);
@@ -90,7 +94,9 @@ export default class ToDo extends React.Component {
             complatedTodo(id);
         }
     }
-    _startEditing = () => {
+    _startEditing = (event) => {
+        //상위 컴포넌트인 SctrollView에 영향을 주지 않도록 설정
+        event.stopPropagation();
         this.setState(preState => {
             return {
                 isEditing: true
@@ -98,7 +104,9 @@ export default class ToDo extends React.Component {
         })
 
     }
-    _finishEditing = () => {
+    _finishEditing = (event) => {
+        //상위 컴포넌트인 SctrollView에 영향을 주지 않도록 설정
+        event.stopPropagation();
         const { toDoValue } = this.state;
         const { id, updatedTodo } = this.props;
         updatedTodo(id, toDoValue);

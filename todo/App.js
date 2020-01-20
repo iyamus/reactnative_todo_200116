@@ -44,16 +44,16 @@ export default class App extends React.Component {
           />
           <ScrollView contentContainerStyle={styles.todo}>
             {Object.values(todo)
-            .reverse() //최신항목이 먼저보이도록 설정.
-            .map(todo =>
-              <ToDo
-                key={todo.id}
-                deleteTodo={this._deleteTodo}
-                uncomplatedTodo={this._uncomplatedTodo}
-                complatedTodo={this._complatedTodo}
-                updatedTodo={this._updatedTodo}
-                {...todo}>
-              </ToDo>)}
+              .reverse() //최신항목이 먼저보이도록 설정.
+              .map(todo =>
+                <ToDo
+                  key={todo.id}
+                  deleteTodo={this._deleteTodo}
+                  uncomplatedTodo={this._uncomplatedTodo}
+                  complatedTodo={this._complatedTodo}
+                  updatedTodo={this._updatedTodo}
+                  {...todo}>
+                </ToDo>)}
 
           </ScrollView>
         </View>
@@ -74,13 +74,17 @@ export default class App extends React.Component {
       const todo = await AsyncStorage.getItem("todos");
       //string을 Json 형태로 변환함
       const parsedTodo = JSON.parse(todo);
-      this.setState({
+
+      // 시간 지연을 통해서 splash화면 보여줌.
+      setTimeout(() => this.setState({
         loadedToDos: true,
         todo: parsedTodo || {}
-      })
+      }), 2000);
     } catch (error) {
       console.log(error);
     }
+    //정보를 AsyncStore에서 읽어 온 이후에 기존 정보를 날려버림.
+    AsyncStorage.clear();
   }
   _addToDo = () => {
     const { newTodo } = this.state;
